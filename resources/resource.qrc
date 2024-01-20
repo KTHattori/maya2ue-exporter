@@ -1,0 +1,15 @@
+<RCC>
+  <qresource prefix="root">
+    <file>img/common/logo.png</file>
+    <file>img/cleaner_kit/icon_cleaner_kit.png</file>
+    <file>img/pivot_relocator/icon_pivot_relocator.png</file>
+    <file>img/pivot_relocator/pivot_base.png</file>
+    <file>img/pivot_relocator/pivot_maxX.png</file>
+    <file>img/pivot_relocator/pivot_maxY.png</file>
+    <file>img/pivot_relocator/pivot_maxZ.png</file>
+    <file>img/pivot_relocator/pivot_minX.png</file>
+    <file>img/pivot_relocator/pivot_minY.png</file>
+    <file>img/pivot_relocator/pivot_minZ.png</file>
+    <file>img/pivot_relocator/pivot_zero.png</file>
+  </qresource>
+</RCC>
