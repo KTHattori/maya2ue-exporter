@@ -1,0 +1,7 @@
+# ignore shortcut link
+*.lnk
+
+# ignore cache files
+/__pycache__/
+
+# EOF
