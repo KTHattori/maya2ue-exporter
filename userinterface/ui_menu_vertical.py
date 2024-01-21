@@ -7,49 +7,62 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
+class Element():
+    def __init__(self):
+        self.button = None
+        self.spacer_bottom = None
+        self.spacer_top = None
+
 class UIMenuVertical(ui_base.UIBase):
     def initialize(self):
-        self.buttons = []
+        self.elements = []
         
     # --- functions related to ui ---
-    def add_button(self,button):
+    def add_element(self,button):
         if self.is_constructed():
-            self.verticalLayout.addWidget(button.construct(self.component))
+            # make element container
+            element = Element()
 
-        self.buttons.append(button)
+            # add topside spacer
+            element.spacer_top = QSpacerItem(20, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+            self.baseLayout.addItem(element.spacer_top)
 
-    def create_button(self,label,function):
-        button = ui_button_base.UIButtonBase(self.identifier + "_" + label)
+            # add button
+            element.button = button.construct(self.component)
+            self.baseLayout.addWidget(element.button)
+                        
+            # add bottomside spacer
+            element.spacer_bottom = QSpacerItem(20, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
+            self.baseLayout.addItem(element.spacer_bottom)
+
+        self.elements.append(element)
+
+    def create_element(self,label,function):
+        button = ui_button_base.UIButtonBase(ui_button_base.UIButtonBase.component_prefix + self.identifier + "_" + label)
         button.set_label_text(label)
         button.bind_function_on_clicked(function)
-        self.add_button(button)
+        self.add_element(button)
 
-    def remove_button(self,button):
+    def remove_element(self,element):
         if self.is_constructed():
-            self.verticalLayout.removeWidget(button.construct(self.component))
+            self.baseLayout.removeWidget(element.spacer_top)
+            self.baseLayout.removeWidget(element.button)
+            self.baseLayout.removeWidget(element.spacer_bottom)
 
-        self.buttons.remove(button)
+        self.elements.remove(element)
 
     # construct ui
     def construct_content(self,widget):
         self.component = QWidget(widget)
 
-        # vertical layout
-        self.verticalLayout = QVBoxLayout(self.component)
-        self.verticalLayout.setObjectName("vlo_" + self.identifier)
+        # base vertical layout
+        self.baseLayout = QVBoxLayout(self.component)
+        self.baseLayout.setObjectName("vlo_" + self.identifier)
 
         # for each buttons
-        for button in self.buttons:
-            # add topside spacer
-            spacer_top = QSpacerItem(20, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
-            self.verticalLayout.addItem(spacer_top)
-
+        for button in self.elements:
             # add button
-            self.add_button(button)
-            
-            # add bottomside spacer
-            spacer_bottom = QSpacerItem(20, 0, QSizePolicy.Minimum, QSizePolicy.Expanding)
-            self.verticalLayout.addItem(spacer_bottom)
+            self.add_element(button)
 
         QMetaObject.connectSlotsByName(self.component)
 

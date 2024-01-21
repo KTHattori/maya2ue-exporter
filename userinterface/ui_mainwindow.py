@@ -21,6 +21,7 @@ import maya2ue.resources.rc
 import maya.cmds as cmds
 
 from . import ui_menu_vertical
+from . import ui_button_JPEN
 from ..module import cleaner_kit
 
 class GUI(QMainWindow):
@@ -141,15 +142,17 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_7.addItem(self.verticalSpacer)
 
-        self.wdt_pivotContent = QWidget(self.tab_pivot)
-        self.wdt_pivotContent.setObjectName(u"wdt_pivotContent")
-        self.horizontalLayout_3 = QHBoxLayout(self.wdt_pivotContent)
+        self.frm_pivotContent = QFrame(self.tab_pivot)
+        self.frm_pivotContent.setObjectName(u"frm_pivotContent")
+        self.frm_pivotContent.setFrameShape(QFrame.Panel)
+        self.frm_pivotContent.setFrameShadow(QFrame.Sunken)
+        self.horizontalLayout_3 = QHBoxLayout(self.frm_pivotContent)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.horizontalSpacer = QSpacerItem(0, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_3.addItem(self.horizontalSpacer)
 
-        self.wdt_pivot = QWidget(self.wdt_pivotContent)
+        self.wdt_pivot = QWidget(self.frm_pivotContent)
         self.wdt_pivot.setObjectName(u"wdt_pivot")
         sizePolicy1 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy1.setHorizontalStretch(1)
@@ -240,7 +243,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addItem(self.horizontalSpacer_2)
 
 
-        self.verticalLayout_7.addWidget(self.wdt_pivotContent)
+        self.verticalLayout_7.addWidget(self.frm_pivotContent)
 
         self.verticalSpacer_3 = QSpacerItem(20, 0, QSizePolicy.Minimum, QSizePolicy.MinimumExpanding)
 
@@ -258,7 +261,7 @@ class Ui_MainWindow(object):
 
 
 
-        # cleaner
+        # --- cleaner kit ---
         self.tab_content.addTab(self.tab_pivot, icon7, "")
         self.tab_clean = QWidget()
         self.tab_clean.setObjectName(u"tab_clean")
@@ -284,17 +287,41 @@ class Ui_MainWindow(object):
         self.lbl_cleanerLabel.setFont(font2)
 
         self.horizontalLayout_7.addWidget(self.lbl_cleanerLabel)
-
-
         self.verticalLayout_3.addWidget(self.wdt_cleanerLabel)
 
-        self.cleanerMenu = ui_menu_vertical.UIMenuVertical("cleaner")
-        self.wdt_cleanerContent = self.cleanerMenu.construct(self.tab_clean)
-        self.cleanerMenu.create_button("Delete All History", lambda: cleaner_kit.freeze_transform())
-        self.cleanerMenu.create_button("Freeze Transform", lambda: cleaner_kit.freeze_transform())
-        self.cleanerMenu.create_button("Print Debug", lambda: cleaner_kit.print_debug())
+        # make cleaner menu
+        self.frm_cleanerContent = QFrame(self.tab_clean)
+        self.frm_cleanerContent.setObjectName(u"frm_cleanerContent")
+        self.frm_cleanerContent.setFrameShape(QFrame.Panel)
+        self.frm_cleanerContent.setFrameShadow(QFrame.Sunken)
 
-        self.verticalLayout_3.addWidget(self.wdt_cleanerContent)
+        vlo_cleaner = QVBoxLayout(self.frm_cleanerContent)
+        vlo_cleaner.setObjectName(u"vlo_cleaner")
+        self.verticalLayout_3.addWidget(self.frm_cleanerContent)
+
+        self.cleanerMenu = ui_menu_vertical.UIMenuVertical("cleaner")
+        cleanerMenuWidget = self.cleanerMenu.construct(self.frm_cleanerContent)
+
+        btn_delete_history = ui_button_JPEN.UIButton_JPEN("delete_history")
+        btn_delete_history.set_label_text_en("Delete All History")
+        btn_delete_history.set_label_text_jp("全ヒストリの削除")
+        btn_delete_history.bind_function_on_clicked(lambda: cleaner_kit.delete_history())
+
+        btn_freeze_transform = ui_button_JPEN.UIButton_JPEN("freeze_transform")
+        btn_freeze_transform.set_label_text_en("Freeze Transform")
+        btn_freeze_transform.set_label_text_jp("トランスフォームのフリーズ")
+        btn_freeze_transform.bind_function_on_clicked(lambda: cleaner_kit.freeze_transform())
+
+        btn_print_debug = ui_button_JPEN.UIButton_JPEN("print_debug")
+        btn_print_debug.set_label_text_en("Print Debug")
+        btn_print_debug.set_label_text_jp("デバッグ")
+        btn_print_debug.bind_function_on_clicked(lambda: cleaner_kit.print_debug())
+
+        self.cleanerMenu.add_element(btn_delete_history)
+        self.cleanerMenu.add_element(btn_freeze_transform)
+        self.cleanerMenu.add_element(btn_print_debug)
+
+        vlo_cleaner.addWidget(cleanerMenuWidget)
 
         icon8 = QIcon()
         icon8.addFile(u":/root/img/cleaner_kit/icon_cleaner_kit.png", QSize(), QIcon.Normal, QIcon.Off)
@@ -302,6 +329,8 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.tab_content)
 
+
+        # --- export ---
         self.frm_export = QFrame(self.wdt_main)
         self.frm_export.setObjectName(u"frm_export")
         font3 = QFont()

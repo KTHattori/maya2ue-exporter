@@ -2,5 +2,5 @@
 
 exporter_main.open()
 
-def maya2ue():
+def open():
     exporter_main.open()
