@@ -1,6 +1,6 @@
 ﻿# ui_window_base.py:
 
-from . import ui_base
+from .ui_base import UIBase
 
 import shiboken2 as shiboken
 

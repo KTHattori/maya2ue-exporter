@@ -1,12 +1,12 @@
 # ui_button_v2r_JPEN.py
 # button component with vertical 2 row label JP / EN
-from . import ui_button_base
+from .ui_button_base import UIButtonBase
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-class UIButton_JPEN(ui_button_base.UIButtonBase):
+class UIButton_JPEN(UIButtonBase):
     def initialize(self):
         super().initialize()
         self.label_text_en = "Button"

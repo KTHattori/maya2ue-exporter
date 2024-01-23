@@ -1,18 +1,19 @@
 ﻿# ui_button_base.py:
 
-from . import ui_base
+from .ui_base import UIBase
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-class UIButtonBase(ui_base.UIBase):
+class UIButtonBase(UIBase):
     component_prefix = "btn_"
 
     def initialize(self):
         self.label_text = "Button"
         self.bound_function = None
         self.enabled = True
+        self.label_font = None
 
     # --- appearance ---
     def set_label_text(self, text):
@@ -20,6 +21,11 @@ class UIButtonBase(ui_base.UIBase):
             self.component.setText(text)
 
         self.label_text = text
+
+    def set_label_font(self, font : QFont):
+        if self.is_constructed():
+            self.component.setFont(font)
+        self.label_font = font
 
     def get_label_text(self):
         return self.label_text
@@ -34,7 +40,6 @@ class UIButtonBase(ui_base.UIBase):
         if self.is_constructed():
             self.component.clicked.connect(function)
         self.bound_function = function
-        print("bound function: " + str(self.bound_function))
 
     def get_bound_function(self):
         return self.bound_function
@@ -47,6 +52,10 @@ class UIButtonBase(ui_base.UIBase):
 
         # set label text
         self.component.setText(self.label_text)
+
+        # set label font
+        if self.label_font is not None:
+            self.component.setFont(self.label_font)
 
         # bind function
         if self.bound_function is not None:

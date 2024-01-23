@@ -1,7 +1,7 @@
 ﻿# ui_menu_vertical.py
 # button component with vertical 2 row label JP / EN
-from . import ui_base
-from . import ui_button_base
+from .ui_base import UIBase
+from .ui_button_base import UIButtonBase
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
@@ -13,7 +13,7 @@ class Element():
         self.spacer_bottom = None
         self.spacer_top = None
 
-class UIMenuVertical(ui_base.UIBase):
+class UIMenuVertical(UIBase):
     def initialize(self):
         self.elements = []
         
@@ -38,7 +38,7 @@ class UIMenuVertical(ui_base.UIBase):
         self.elements.append(element)
 
     def create_element(self,label,function):
-        button = ui_button_base.UIButtonBase(ui_button_base.UIButtonBase.component_prefix + self.identifier + "_" + label)
+        button = UIButtonBase(UIButtonBase.component_prefix + self.identifier + "_" + label)
         button.set_label_text(label)
         button.bind_function_on_clicked(function)
         self.add_element(button)
