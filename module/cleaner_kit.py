@@ -19,28 +19,28 @@ class CleanerKit(ModuleBase):
     def reset_transform(self):
         selected = cmds.ls(sl=True)
         if len(selected) == 0:
-            self.log("オブジェクトが選択されていません","No object selected.")
+            self.log_warning("オブジェクトが選択されていません","No object selected.")
             return
     
         cmds.makeIdentity(selected[0],apply=False, t=1, r=1, s=1, n=0)
-        self.log("トランスフォームをリセットしました。","Resetted transform.")
+        self.log_success("トランスフォームをリセットしました。","Resetted transform.")
 
     def freeze_transform(self):
         selected = cmds.ls(sl=True)
         if len(selected) == 0:
-            self.log("オブジェクトが選択されていません","No object selected.")
+            self.log_warning("オブジェクトが選択されていません","No object selected.")
             return
         
         cmds.makeIdentity(selected[0],apply=True, t=1, r=1, s=1, n=0)
-        self.log("トランスフォームをフリーズしました。","Freezeed transform.")
+        self.log_success("トランスフォームをフリーズしました。","Freezeed transform.")
     
     def delete_unused_nodes(self):
         mel.eval("MLdeleteUnused;")
-        self.log("未使用ノードを削除しました。","Deleted unused nodes.")
+        self.log_success("未使用ノードを削除しました。","Deleted unused nodes.")
 
     def delete_history(self):
         cmds.DeleteAllHistory()
-        self.log("全ヒストリを削除しました。","Deleted all history.")
+        self.log_success("全ヒストリを削除しました。","Deleted all history.")
 
     def construct_ui(self, parentUI = None):
         font = QFont()

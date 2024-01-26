@@ -25,6 +25,7 @@ from .ui_button_JPEN import UIButton_JPEN
 from ..module.cleaner_kit import CleanerKit
 from ..module.pivot_relocator import PivotRelocator
 from ..module.unreal_exporter import UnrealExporter
+from ..module.logger import Logger
 
 
 class GUI(QMainWindow):
@@ -41,7 +42,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(567, 752)
+        MainWindow.resize(573, 862)
         sizePolicy = QSizePolicy(QSizePolicy.MinimumExpanding, QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -118,10 +119,15 @@ class Ui_MainWindow(object):
         # --- unreal exporter ---
         self.unreal_exporter = UnrealExporter()
         exporter_ui = self.unreal_exporter.make_ui(self.wdt_main)
-
         self.verticalLayout.addWidget(exporter_ui)
-        self.verticalLayout_2.addWidget(self.wdt_main)
 
+        # --- logger ---
+        self.logger = Logger()
+        logger_ui = self.logger.make_ui(self.wdt_main)
+        self.verticalLayout.addWidget(logger_ui)
+
+        # --- end adding widgets ---
+        self.verticalLayout_2.addWidget(self.wdt_main)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")

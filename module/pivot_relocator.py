@@ -224,13 +224,13 @@ class PivotRelocator(ModuleBase):
     def bake_pivot(self):
         selection = cmds.ls(sl=True)
         if len(selection) == 0:
-            self.log("オブジェクトが選択されていません","No object selected.")
+            self.log_warning("オブジェクトが選択されていません","No object selected.")
             return
         
         cmds.select(selection[0])
         cmds.setToolTo("moveSuperContext")
         cmds.BakeCustomPivot()
-        self.log("ピボットをベイクしました","Baked current pivot.")
+        self.log_info("ピボットをベイクしました","Baked current pivot.")
 
     def relocate_pivot(self,relocateType : RelocateType):
         # コンポーネント選択だったらオブジェクト選択にする
@@ -239,7 +239,7 @@ class PivotRelocator(ModuleBase):
 
         selection = cmds.ls(sl=True)
         if len(selection) == 0:
-            self.log("オブジェクトが選択されていません","No object selected.")
+            self.log_warning("オブジェクトが選択されていません","No object selected.")
             return
         
         for selected in selection:
@@ -266,4 +266,4 @@ class PivotRelocator(ModuleBase):
             case PivotRelocator.RelocateType.Center:
                 cmds.xform(selected,cp=True)
 
-        self.log("ピボットを移動しました","Relocated pivot.")
+        self.log_info("ピボットを移動しました: " + relocateType.name ,"Relocated pivot to: " + relocateType.name)

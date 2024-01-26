@@ -1,6 +1,7 @@
 ﻿# module.py
 
 from abc import ABCMeta, abstractmethod
+from .logger import Logger
 
 class ModuleBase(metaclass=ABCMeta):
     def __init__(self,identifier = "Module Name"):
@@ -42,8 +43,28 @@ class ModuleBase(metaclass=ABCMeta):
     def is_constructed(self):
         return self.constructed
     
-    def log(self, jp,en = ""):
+    def log_debug(self,jp,en = ""):
         print("[" + self.identifier + "] " + jp + " / " + en)
+        Logger.emit(self,jp + " / " + en,Logger.Level.Debug)
+
+    def log_info(self,jp,en = ""):
+        print("[" + self.identifier + "] " + jp + " / " + en)
+        Logger.emit(self,jp + " / " + en,Logger.Level.Info)
+
+    def log_success(self,jp,en = ""):
+        print("[" + self.identifier + "] " + jp + " / " + en)
+        Logger.emit(self,jp + " / " + en,Logger.Level.Success)
+
+    def log_warning(self,jp,en = ""):
+        print("[" + self.identifier + "] " + jp + " / " + en)
+        Logger.emit(self,jp + " / " + en,Logger.Level.Warning)
+
+    def log_error(self,jp,en = ""):
+        print("[" + self.identifier + "] " + jp + " / " + en)
+        Logger.emit(self,jp + " / " + en,Logger.Level.Error)
+
+    def log_clear(self):
+        Logger.clear()
     
     @abstractmethod
     def initialize(self):
