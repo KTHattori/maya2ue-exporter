@@ -8,22 +8,19 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-# reloadを使用するためのモジュールをインポート
-import importlib
-import maya2ue.userinterface.ui_mainwindow as MainWindow ;importlib.reload(MainWindow)
+# import main window
+from .userinterface.ui_mainwindow import GUI as MainWindow
 
-def open():
-    global mainWindow
+def main():
+    global main_window
 
     # Try to close window if it already exists
-    try:mainWindow.close()
+    try:main_window.close()
     except:pass
 
     # Create window
     app = QApplication.instance()
-    mainWindow = MainWindow.GUI()
-    mainWindow.show()
+    main_window = MainWindow()
+    main_window.show()
     
     app.exec_()
-
-open()

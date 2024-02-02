@@ -27,7 +27,6 @@ from ..module.pivot_relocator import PivotRelocator
 from ..module.unreal_exporter import UnrealExporter
 from ..module.logger import Logger
 
-
 class GUI(QMainWindow):
 	ptr = OpenMayaUI.MQtUtil.mainWindow()
 	parent = shiboken.wrapInstance(int(ptr), QWidget)

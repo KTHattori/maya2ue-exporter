@@ -1,7 +1,6 @@
 ﻿import importlib
-import maya2ue.maya2ue_exporter as exporter_main; importlib.reload(exporter_main)
-
-exporter_main.open()
+from . import maya2ue_exporter as exporter; importlib.reload(exporter)
 
 def open():
-    exporter_main.open()
+    importlib.reload(exporter)
+    exporter.main()

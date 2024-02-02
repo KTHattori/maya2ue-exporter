@@ -38,7 +38,11 @@ class CleanerKit(ModuleBase):
         mel.eval("MLdeleteUnused;")
         self.log_success("未使用ノードを削除しました。","Deleted unused nodes.")
 
-    def delete_history(self):
+    def delete_nondef_history(self):
+        mel.eval("DeleteNonDefHistory;")
+        self.log_success("デフォーム以外のヒストリを削除しました。","Deleted non-deform history.")
+
+    def delete_all_history(self):
         cmds.DeleteAllHistory()
         self.log_success("全ヒストリを削除しました。","Deleted all history.")
 
@@ -87,30 +91,36 @@ class CleanerKit(ModuleBase):
         self.cleanerMenu = UIMenuVertical("cleaner")
         cleanerMenuWidget = self.cleanerMenu.construct(self.gbx_cleanerContent)
 
-        btn_reset_transform = UIButton_JPEN("reset_transform")
-        btn_reset_transform.set_label_text_en("Reset Transform")
-        btn_reset_transform.set_label_text_jp("トランスフォームのリセット")
-        btn_reset_transform.bind_function_on_clicked(lambda: self.reset_transform())
-
         btn_freeze_transform = UIButton_JPEN("freeze_transform")
         btn_freeze_transform.set_label_text_en("Freeze Transform")
         btn_freeze_transform.set_label_text_jp("トランスフォームのフリーズ")
         btn_freeze_transform.bind_function_on_clicked(lambda: self.freeze_transform())
+
+        btn_reset_transform = UIButton_JPEN("reset_transform")
+        btn_reset_transform.set_label_text_en("Reset Transform")
+        btn_reset_transform.set_label_text_jp("トランスフォームのリセット")
+        btn_reset_transform.bind_function_on_clicked(lambda: self.reset_transform())
 
         btn_delete_unused_nodes = UIButton_JPEN("delete_unused_nodes")
         btn_delete_unused_nodes.set_label_text_en("Delete Unused Nodes")
         btn_delete_unused_nodes.set_label_text_jp("未使用ノードの削除")
         btn_delete_unused_nodes.bind_function_on_clicked(lambda: self.delete_unused_nodes())
 
-        btn_delete_history = UIButton_JPEN("delete_history")
-        btn_delete_history.set_label_text_en("Delete All History")
-        btn_delete_history.set_label_text_jp("全ヒストリの削除")
-        btn_delete_history.bind_function_on_clicked(lambda: self.delete_history())
+        btn_delete_nondef_history = UIButton_JPEN("delete_nondef_history")
+        btn_delete_nondef_history.set_label_text_en("Delete Non-Deform History")
+        btn_delete_nondef_history.set_label_text_jp("デフォーム以外のヒストリの削除")
+        btn_delete_nondef_history.bind_function_on_clicked(lambda: self.delete_nondef_history())
 
-        self.cleanerMenu.add_element(btn_reset_transform)
+        btn_delete_all_history = UIButton_JPEN("delete_all_history")
+        btn_delete_all_history.set_label_text_en("Delete All History")
+        btn_delete_all_history.set_label_text_jp("全ヒストリの削除")
+        btn_delete_all_history.bind_function_on_clicked(lambda: self.delete_all_history())
+
         self.cleanerMenu.add_element(btn_freeze_transform)
+        self.cleanerMenu.add_element(btn_reset_transform)
         self.cleanerMenu.add_element(btn_delete_unused_nodes)
-        self.cleanerMenu.add_element(btn_delete_history)
+        self.cleanerMenu.add_element(btn_delete_nondef_history)
+        self.cleanerMenu.add_element(btn_delete_all_history)
 
         vlo_cleaner.addWidget(cleanerMenuWidget)
 

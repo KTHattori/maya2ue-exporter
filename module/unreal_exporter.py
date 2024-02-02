@@ -1,6 +1,7 @@
 ﻿import maya.cmds as cmds
 import maya.mel as mel
-import maya.OpenMaya as om
+import maya.api.OpenMaya as om2
+
 from enum import IntEnum
 from .module_base import ModuleBase
 from ..userinterface.ui_button_JPEN import UIButton_JPEN
@@ -12,11 +13,12 @@ from PySide2.QtWidgets import *
 class UnrealExporter(ModuleBase):
     class ExportType(IntEnum):
         StaticMesh = 0
-        Skeleton = 1
-        SkeletalMesh = 2
+        SkeletalMesh = 1
+        Animation = 2
     
     def __init__(self):
         super().__init__("Unreal Exporter")
+
 
     def initialize(self):
         self.exportType = UnrealExporter.ExportType.StaticMesh
@@ -24,7 +26,21 @@ class UnrealExporter(ModuleBase):
         self.nameComponent = None
         self.name_prefix = "SM_"
         self.name_body = self.get_scene_name().split(".")[0]
-        print(self.name_body)
+        refresh_callback = om2.MSceneMessage.addCallback(om2.MSceneMessage.kAfterFileRead, self.on_file_read)
+        # OpenMaya.MCommandMessage.removeCallback(refresh_callback)
+
+    def on_file_read(self):
+        self.refresh_export_name()
+        self.refresh_export_path()
+        self.log_info("シーンが変更されました:","Scene changed.")
+        print("シーンが変更されました")
+
+    def refresh_export_name(self):
+        self.name_body = self.get_scene_name().split(".")[0]
+        self.nameComponent.setText(self.name_body)
+
+    def refresh_export_path(self):
+        self.lbl_exportpath.setText(self.get_scene_path())
 
     def get_scene_name(self):
         return cmds.file(query=True,sceneName=True,shortName=True)
@@ -40,11 +56,11 @@ class UnrealExporter(ModuleBase):
         match self.exportType:
             case UnrealExporter.ExportType.StaticMesh:
                 self.prefixComponent.setText("SM_")
-            case UnrealExporter.ExportType.Skeleton:
-                self.prefixComponent.setText("Skeleton_")
             case UnrealExporter.ExportType.SkeletalMesh:
                 self.prefixComponent.setText("SK_")
-
+            case UnrealExporter.ExportType.Animation:
+                self.prefixComponent.setText("A_")
+            
     def export_as_fbx(self,path):
         # FBXエクスポート設定
         cmds.FBXResetExport()  # リセット
@@ -79,12 +95,17 @@ class UnrealExporter(ModuleBase):
                     self.log_error("有効なメッシュが存在しません","No mesh selected.")
                     return
 
-            case UnrealExporter.ExportType.Skeleton:
+            case UnrealExporter.ExportType.Animation:
                 # 選択オブジェクトのジョイントのみを選択
                 cmds.select(cmds.ls(selection=True,dag=True,type="joint"))
                 joints = cmds.ls(selection=True)
                 if len(joints) == 0:
                     self.log_error("有効なジョイントが存在しません","No joint selected.")
+                    return
+                
+                # キーフレームが存在するか確認
+                if cmds.keyframe(query=True,selected=True,keyframeCount=True) == 0:
+                    self.log_error("キーフレームが存在しません","No keyframe selected.")
                     return
 
             case UnrealExporter.ExportType.SkeletalMesh:
@@ -111,9 +132,6 @@ class UnrealExporter(ModuleBase):
         # --- エクスポート ---
         self.export_as_fbx(export_path)
 
-
-
-
     def construct_ui(self, parentUI = None):  
         font = QFont()
         font.setPointSize(9)
@@ -138,8 +156,8 @@ class UnrealExporter(ModuleBase):
         # Export Type Selector
         self.cbx_exporttype = QComboBox(self.wdt_export)
         self.cbx_exporttype.addItem("メッシュのみ - Meshes Only (Static Mesh)")
-        self.cbx_exporttype.addItem("ジョイントのみ - Joints Only (Skeleton)")
-        self.cbx_exporttype.addItem("メッシュ + ジョイント - Meshes + Joints (Skeletal Mesh)")
+        self.cbx_exporttype.addItem("メッシュ + ボーン - Meshes + Bones (Skeletal Mesh)")
+        self.cbx_exporttype.addItem("アニメーションのみ - Animation Only")
         self.cbx_exporttype.setObjectName(u"cbx_exporttype")
         self.cbx_exporttype.currentIndexChanged.connect(self.set_export_type)
 
@@ -217,12 +235,13 @@ class UnrealExporter(ModuleBase):
         self.verticalLayout_8.addWidget(self.wdt_rename)
 
         # Export Path Label
-        # self.lbl_exportpath = QLabel()
-        # self.lbl_exportpath.setObjectName(u"lbl_exportpath")
-        # self.lbl_exportpath.setAlignment(Qt.AlignCenter)
-        # self.lbl_exportpath.setTextInteractionFlags(Qt.TextSelectableByMouse)
-        # self.lbl_exportpath.setText(self.get_scene_path())
-        # self.verticalLayout_8.addWidget(self.lbl_exportpath)
+        self.lbl_exportpath = QLabel()
+        self.lbl_exportpath.setObjectName(u"lbl_exportpath")
+        self.lbl_exportpath.setAlignment(Qt.AlignCenter)
+        self.lbl_exportpath.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        self.lbl_exportpath.setText(self.get_scene_path())
+        
+        self.verticalLayout_8.addWidget(self.lbl_exportpath)
 
         self.verticalLayout_6.addWidget(self.wdt_export)
 
@@ -234,4 +253,5 @@ class UnrealExporter(ModuleBase):
         self.lbl_body_input.setText(QCoreApplication.translate("MainWindow", u"Name", None))
         self.btn_export.setText(QCoreApplication.translate("MainWindow", u"Export\n"
 "\u30a8\u30af\u30b9\u30dd\u30fc\u30c8", None))
+        
         return self.frm_export

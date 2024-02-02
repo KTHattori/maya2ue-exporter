@@ -138,7 +138,7 @@
           <enum>QTabWidget::Rounded</enum>
          </property>
          <property name="currentIndex">
-          <number>2</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab_pivot">
           <attribute name="icon">
@@ -664,8 +664,8 @@
                   <rect>
                    <x>0</x>
                    <y>0</y>
-                   <width>475</width>
-                   <height>249</height>
+                   <width>493</width>
+                   <height>326</height>
                   </rect>
                  </property>
                 </widget>
@@ -697,8 +697,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>499</width>
-                <height>290</height>
+                <width>511</width>
+                <height>354</height>
                </rect>
               </property>
              </widget>
@@ -769,12 +769,12 @@
                </property>
                <item>
                 <property name="text">
-                 <string>Meshes Only (Static Mesh)</string>
+                 <string>Meshes (Static Mesh)</string>
                 </property>
                </item>
                <item>
                 <property name="text">
-                 <string>Bones Only (Skeleton)</string>
+                 <string>Animation</string>
                 </property>
                </item>
                <item>
